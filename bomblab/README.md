@@ -1,5 +1,5 @@
 ## Question
-为什么CMU的lab给出一份用MAC编辑的binary。最终还是在自己的垃圾Unbuntu上搞定的.
+为什么CMU的lab不给出一份用MAC编译的binary。最终还是在自己的垃圾Unbuntu上搞定的.
 
 ## 反编译
 ```
