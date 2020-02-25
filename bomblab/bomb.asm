@@ -293,239 +293,277 @@ phase_1:
   400efb:	c3 	            retq
 
 phase_2:
-  400efc:	55 	pushq	%rbp
-  400efd:	53 	pushq	%rbx
-  400efe:	48 83 ec 28 	subq	$40, %rsp
-  400f02:	48 89 e6 	movq	%rsp, %rsi
-  400f05:	e8 52 05 00 00 	callq	1362 <read_six_numbers>
-  400f0a:	83 3c 24 01 	cmpl	$1, (%rsp)
-  400f0e:	74 20 	je	32 <phase_2+0x34>
+  400efc:	55 	            pushq	%rbp
+  400efd:	53 	            pushq	%rbx
+  400efe:	48 83 ec 28 	  subq	$40, %rsp
+  400f02:	48 89 e6 	      movq	%rsp, %rsi
+  400f05:	e8 52 05 00 00  callq	1362 <read_six_numbers>
+  400f0a:	83 3c 24 01 	  cmpl	$1, (%rsp)
+  400f0e:	74 20 	        je	32 <phase_2+0x34>     // 0x400f30
   400f10:	e8 25 05 00 00 	callq	1317 <explode_bomb>
-  400f15:	eb 19 	jmp	25 <phase_2+0x34>
-  400f17:	8b 43 fc 	movl	-4(%rbx), %eax
-  400f1a:	01 c0 	addl	%eax, %eax
-  400f1c:	39 03 	cmpl	%eax, (%rbx)
-  400f1e:	74 05 	je	5 <phase_2+0x29>
+  400f15:	eb 19 	        jmp	25 <phase_2+0x34>     // 0x400f30
+  400f17:	8b 43 fc 	      movl	-4(%rbx), %eax
+  400f1a:	01 c0 	        addl	%eax, %eax
+  400f1c:	39 03 	        cmpl	%eax, (%rbx)
+  400f1e:	74 05 	        je	5 <phase_2+0x29>      // 0x400f25
   400f20:	e8 15 05 00 00 	callq	1301 <explode_bomb>
-  400f25:	48 83 c3 04 	addq	$4, %rbx
-  400f29:	48 39 eb 	cmpq	%rbp, %rbx
-  400f2c:	75 e9 	jne	-23 <phase_2+0x1b>
-  400f2e:	eb 0c 	jmp	12 <phase_2+0x40>
+  400f25:	48 83 c3 04 	  addq	$4, %rbx
+  400f29:	48 39 eb 	      cmpq	%rbp, %rbx
+  400f2c:	75 e9 	        jne	-23 <phase_2+0x1b>     // 0x400f17
+  400f2e:	eb 0c 	        jmp	12 <phase_2+0x40>      // 0x400f3c
   400f30:	48 8d 5c 24 04 	leaq	4(%rsp), %rbx
   400f35:	48 8d 6c 24 18 	leaq	24(%rsp), %rbp
-  400f3a:	eb db 	jmp	-37 <phase_2+0x1b>
-  400f3c:	48 83 c4 28 	addq	$40, %rsp
-  400f40:	5b 	popq	%rbx
-  400f41:	5d 	popq	%rbp
-  400f42:	c3 	retq
+  400f3a:	eb db 	        jmp	-37 <phase_2+0x1b>     // 0x400f17
+  400f3c:	48 83 c4 28 	  addq	$40, %rsp
+  400f40:	5b 	            popq	%rbx
+  400f41:	5d 	            popq	%rbp
+  400f42:	c3 	            retq
 
 phase_3:
-  400f43:	48 83 ec 18 	subq	$24, %rsp
-  400f47:	48 8d 4c 24 0c 	leaq	12(%rsp), %rcx
-  400f4c:	48 8d 54 24 08 	leaq	8(%rsp), %rdx
-  400f51:	be cf 25 40 00 	movl	$4203983, %esi
+  400f43:	48 83 ec 18 	  subq	$24, %rsp
+  400f47:	48 8d 4c 24 0c 	leaq	12(%rsp), %rcx        // rcx = rsp + 12  4th argument
+  400f4c:	48 8d 54 24 08 	leaq	8(%rsp), %rdx         // rdx = rsp + 8   3th argument
+  400f51:	be cf 25 40 00 	movl	$4203983, %esi        // esi 存储模版“%d %d” 2nd argument  1st为input string key,这个模版是什么
   400f56:	b8 00 00 00 00 	movl	$0, %eax
   400f5b:	e8 90 fc ff ff 	callq	-880 <.plt+0x120>
-  400f60:	83 f8 01 	cmpl	$1, %eax
-  400f63:	7f 05 	jg	5 <phase_3+0x27>
+  400f60:	83 f8 01 	      cmpl	$1, %eax
+  400f63:	7f 05 	        jg	5 <phase_3+0x27>        // eax > 1 ,则0x400f6a，否则bomb
   400f65:	e8 d0 04 00 00 	callq	1232 <explode_bomb>
-  400f6a:	83 7c 24 08 07 	cmpl	$7, 8(%rsp)
-  400f6f:	77 3c 	ja	60 <phase_3+0x6a>
-  400f71:	8b 44 24 08 	movl	8(%rsp), %eax
-  400f75:	ff 24 c5 70 24 40 00 	jmpq	*4203632(,%rax,8)
+  400f6a:	83 7c 24 08 07 	cmpl	$7, 8(%rsp)           // 3th argument与7比较
+  400f6f:	77 3c 	        ja	60 <phase_3+0x6a>       // 0x400fad ja above 在7的上面就bomb
+  400f71:	8b 44 24 08 	  movl	8(%rsp), %eax         // eax现在存储3th argument
+  400f75:	ff 24 c5 70 24 40 00 	jmpq	*4203632(,%rax,8) // 8*($rax) + *4203632(0x400f7c)
   400f7c:	b8 cf 00 00 00 	movl	$207, %eax
-  400f81:	eb 3b 	jmp	59 <phase_3+0x7b>
-  400f83:	b8 c3 02 00 00 	movl	$707, %eax
-  400f88:	eb 34 	jmp	52 <phase_3+0x7b>
+  400f81:	eb 3b 	        jmp	59 <phase_3+0x7b>       // 0x400fbe
+  400f83:	b8 c3 02 00 00 	movl	$707, %eax            
+  400f88:	eb 34 	        jmp	52 <phase_3+0x7b>
   400f8a:	b8 00 01 00 00 	movl	$256, %eax
-  400f8f:	eb 2d 	jmp	45 <phase_3+0x7b>
+  400f8f:	eb 2d 	        jmp	45 <phase_3+0x7b>
   400f91:	b8 85 01 00 00 	movl	$389, %eax
-  400f96:	eb 26 	jmp	38 <phase_3+0x7b>
+  400f96:	eb 26 	        jmp	38 <phase_3+0x7b>
   400f98:	b8 ce 00 00 00 	movl	$206, %eax
-  400f9d:	eb 1f 	jmp	31 <phase_3+0x7b>
+  400f9d:	eb 1f 	        jmp	31 <phase_3+0x7b>
   400f9f:	b8 aa 02 00 00 	movl	$682, %eax
-  400fa4:	eb 18 	jmp	24 <phase_3+0x7b>
+  400fa4:	eb 18 	        jmp	24 <phase_3+0x7b>
   400fa6:	b8 47 01 00 00 	movl	$327, %eax
-  400fab:	eb 11 	jmp	17 <phase_3+0x7b>
+  400fab:	eb 11 	        jmp	17 <phase_3+0x7b>
   400fad:	e8 88 04 00 00 	callq	1160 <explode_bomb>
   400fb2:	b8 00 00 00 00 	movl	$0, %eax
-  400fb7:	eb 05 	jmp	5 <phase_3+0x7b>
-  400fb9:	b8 37 01 00 00 	movl	$311, %eax
-  400fbe:	3b 44 24 0c 	cmpl	12(%rsp), %eax
-  400fc2:	74 05 	je	5 <phase_3+0x86>
+  400fb7:	eb 05 	        jmp	5 <phase_3+0x7b>
+  400fb9:	b8 37 01 00 00 	movl	$311, %eax          // 1 & 311
+  400fbe:	3b 44 24 0c 	  cmpl	12(%rsp), %eax      // 比较eax和rsp+12,即第四个参数
+  400fc2:	74 05 	        je	5 <phase_3+0x86>      // 0x400fc9，相等则结束,否则bomb
   400fc4:	e8 71 04 00 00 	callq	1137 <explode_bomb>
-  400fc9:	48 83 c4 18 	addq	$24, %rsp
+  400fc9:	48 83 c4 18 	  addq	$24, %rsp
   400fcd:	c3 	retq
 
 func4:
-  400fce:	48 83 ec 08 	subq	$8, %rsp
-  400fd2:	89 d0 	movl	%edx, %eax
-  400fd4:	29 f0 	subl	%esi, %eax
-  400fd6:	89 c1 	movl	%eax, %ecx
-  400fd8:	c1 e9 1f 	shrl	$31, %ecx
-  400fdb:	01 c8 	addl	%ecx, %eax
-  400fdd:	d1 f8 	sarl	%eax
-  400fdf:	8d 0c 30 	leal	(%rax,%rsi), %ecx
-  400fe2:	39 f9 	cmpl	%edi, %ecx
-  400fe4:	7e 0c 	jle	12 <func4+0x24>
-  400fe6:	8d 51 ff 	leal	-1(%rcx), %edx
-  400fe9:	e8 e0 ff ff ff 	callq	-32 <func4>
-  400fee:	01 c0 	addl	%eax, %eax
-  400ff0:	eb 15 	jmp	21 <func4+0x39>
-  400ff2:	b8 00 00 00 00 	movl	$0, %eax
-  400ff7:	39 f9 	cmpl	%edi, %ecx
-  400ff9:	7d 0c 	jge	12 <func4+0x39>
-  400ffb:	8d 71 01 	leal	1(%rcx), %esi
-  400ffe:	e8 cb ff ff ff 	callq	-53 <func4>
-  401003:	8d 44 00 01 	leal	1(%rax,%rax), %eax
-  401007:	48 83 c4 08 	addq	$8, %rsp
+  400fce:	48 83 ec 08 	   subq	$8, %rsp
+  400fd2:	89 d0 	         movl	%edx, %eax
+  400fd4:	29 f0 	         subl	%esi, %eax         // eax存储arg3-arg2,即存储14
+  400fd6:	89 c1 	         movl	%eax, %ecx         // ecx存储14
+  400fd8:	c1 e9 1f 	       shrl	$31, %ecx           // 14>>=31 -> 0，现在ecx保存0，相当于取符号位
+  400fdb:	01 c8 	         addl	%ecx, %eax         // eax存储14
+  400fdd:	d1 f8 	         sarl	%eax  //算术右移,考虑符号位置,现在eax存储7
+  400fdf:	8d 0c 30 	       leal	(%rax,%rsi), %ecx //ecx = rax + rsi, 7+0 = 7
+  400fe2:	39 f9 	         cmpl	%edi, %ecx // ecx存储7，edi为arg1
+  400fe4:	7e 0c 	         jle	12 <func4+0x24>     // 400ff2 7<=arg1，就jump
+  400fe6:	8d 51 ff 	       leal	-1(%rcx), %edx
+  400fe9:	e8 e0 ff ff ff 	 callq	-32 <func4>
+  400fee:	01 c0 	         addl	%eax, %eax
+  400ff0:	eb 15 	         jmp	21 <func4+0x39>     // 401007
+  400ff2:	b8 00 00 00 00 	 movl	$0, %eax
+  400ff7:	39 f9 	         cmpl	%edi, %ecx         //所以必须为7喽？ 因此没啥意思
+  400ff9:	7d 0c 	         jge	12 <func4+0x39>     // 401007
+  400ffb:	8d 71 01 	       leal	1(%rcx), %esi
+  400ffe:	e8 cb ff ff ff 	 callq	-53 <func4>
+  401003:	8d 44 00 01 	   leal	1(%rax,%rax), %eax
+  401007:	48 83 c4 08 	   addq	$8, %rsp
   40100b:	c3 	retq
 
 phase_4:
-  40100c:	48 83 ec 18 	subq	$24, %rsp
-  401010:	48 8d 4c 24 0c 	leaq	12(%rsp), %rcx
-  401015:	48 8d 54 24 08 	leaq	8(%rsp), %rdx
-  40101a:	be cf 25 40 00 	movl	$4203983, %esi
+  40100c:	48 83 ec 18 	  subq	$24, %rsp
+  401010:	48 8d 4c 24 0c 	leaq	12(%rsp), %rcx       // rcx = rsp + 12  4th argument
+  401015:	48 8d 54 24 08 	leaq	8(%rsp), %rdx        // rdx = rsp + 8   3th argument
+  40101a:	be cf 25 40 00 	movl	$4203983, %esi       // 与phase3 一样,输入两个数字
   40101f:	b8 00 00 00 00 	movl	$0, %eax
   401024:	e8 c7 fb ff ff 	callq	-1081 <.plt+0x120>
-  401029:	83 f8 02 	cmpl	$2, %eax
-  40102c:	75 07 	jne	7 <phase_4+0x29>
-  40102e:	83 7c 24 08 0e 	cmpl	$14, 8(%rsp)
-  401033:	76 05 	jbe	5 <phase_4+0x2e>
+  401029:	83 f8 02 	      cmpl	$2, %eax
+  40102c:	75 07 	        jne	7 <phase_4+0x29>       // 401035 sfprintf的结果必须是2,不然会bomb
+  40102e:	83 7c 24 08 0e 	cmpl	$14, 8(%rsp)         // 输入的第一个数和14比较，必须小于等于14才可以
+  401033:	76 05 	        jbe	5 <phase_4+0x2e>       // 40103a
   401035:	e8 00 04 00 00 	callq	1024 <explode_bomb>
   40103a:	ba 0e 00 00 00 	movl	$14, %edx
   40103f:	be 00 00 00 00 	movl	$0, %esi
-  401044:	8b 7c 24 08 	movl	8(%rsp), %edi
+  401044:	8b 7c 24 08 	  movl	8(%rsp), %edi        // 调用函数func4,第一个参数为我们输入的第一个数字,第二个参数为0,第三个参数(edx)为14
   401048:	e8 81 ff ff ff 	callq	-127 <func4>
-  40104d:	85 c0 	testl	%eax, %eax
-  40104f:	75 07 	jne	7 <phase_4+0x4c>
-  401051:	83 7c 24 0c 00 	cmpl	$0, 12(%rsp)
-  401056:	74 05 	je	5 <phase_4+0x51>
+  40104d:	85 c0 	        testl	%eax, %eax           // eax & eax,不为0就bomb，所以必须想办法让func4返回0
+  40104f:	75 07 	        jne	7 <phase_4+0x4c>       // 401058
+  401051:	83 7c 24 0c 00 	cmpl	$0, 12(%rsp)         // 我们输入的第二个参数必须是0，不然bomb
+  401056:	74 05 	        je	5 <phase_4+0x51>       // 40105d
   401058:	e8 dd 03 00 00 	callq	989 <explode_bomb>
-  40105d:	48 83 c4 18 	addq	$24, %rsp
-  401061:	c3 	retq
+  40105d:	48 83 c4 18 	  addq	$24, %rsp
+  401061:	c3 	            retq
 
 phase_5:
-  401062:	53 	pushq	%rbx
-  401063:	48 83 ec 20 	subq	$32, %rsp
-  401067:	48 89 fb 	movq	%rdi, %rbx
+  401062:	53 	                        pushq	%rbx
+  401063:	48 83 ec 20 	              subq	$32, %rsp
+  401067:	48 89 fb 	                  movq	%rdi, %rbx
   40106a:	64 48 8b 04 25 28 00 00 00 	movq	%fs:40, %rax
-  401073:	48 89 44 24 18 	movq	%rax, 24(%rsp)
-  401078:	31 c0 	xorl	%eax, %eax
-  40107a:	e8 9c 02 00 00 	callq	668 <string_length>
-  40107f:	83 f8 06 	cmpl	$6, %eax
-  401082:	74 4e 	je	78 <phase_5+0x70>
-  401084:	e8 b1 03 00 00 	callq	945 <explode_bomb>
-  401089:	eb 47 	jmp	71 <phase_5+0x70>
-  40108b:	0f b6 0c 03 	movzbl	(%rbx,%rax), %ecx
-  40108f:	88 0c 24 	movb	%cl, (%rsp)
-  401092:	48 8b 14 24 	movq	(%rsp), %rdx
-  401096:	83 e2 0f 	andl	$15, %edx
-  401099:	0f b6 92 b0 24 40 00 	movzbl	4203696(%rdx), %edx
-  4010a0:	88 54 04 10 	movb	%dl, 16(%rsp,%rax)
-  4010a4:	48 83 c0 01 	addq	$1, %rax
-  4010a8:	48 83 f8 06 	cmpq	$6, %rax
-  4010ac:	75 dd 	jne	-35 <phase_5+0x29>
-  4010ae:	c6 44 24 16 00 	movb	$0, 22(%rsp)
-  4010b3:	be 5e 24 40 00 	movl	$4203614, %esi
-  4010b8:	48 8d 7c 24 10 	leaq	16(%rsp), %rdi
-  4010bd:	e8 76 02 00 00 	callq	630 <strings_not_equal>
-  4010c2:	85 c0 	testl	%eax, %eax
-  4010c4:	74 13 	je	19 <phase_5+0x77>
-  4010c6:	e8 6f 03 00 00 	callq	879 <explode_bomb>
-  4010cb:	0f 1f 44 00 00 	nopl	(%rax,%rax)
-  4010d0:	eb 07 	jmp	7 <phase_5+0x77>
-  4010d2:	b8 00 00 00 00 	movl	$0, %eax
-  4010d7:	eb b2 	jmp	-78 <phase_5+0x29>
-  4010d9:	48 8b 44 24 18 	movq	24(%rsp), %rax
+  401073:	48 89 44 24 18 	            movq	%rax, 24(%rsp)
+  401078:	31 c0 	                    xorl	%eax, %eax
+  40107a:	e8 9c 02 00 00 	            callq	668 <string_length>
+  40107f:	83 f8 06 	                  cmpl	$6, %eax             // 输入str的长度必须是6
+  401082:	74 4e 	                    je	78 <phase_5+0x70>      // 4010d2
+  401084:	e8 b1 03 00 00 	            callq	945 <explode_bomb>
+  401089:	eb 47 	                    jmp	71 <phase_5+0x70>
+  40108b:	0f b6 0c 03 	              movzbl	(%rbx,%rax), %ecx  // ecx = rbx + rax(0)
+  40108f:	88 0c 24 	                  movb	%cl, (%rsp)          // cl? 是哪个寄存器？ecx的最低位
+  401092:	48 8b 14 24 	              movq	(%rsp), %rdx
+  401096:	83 e2 0f 	                  andl	$15, %edx            // edx = $15 & %edx
+  401099:	0f b6 92 b0 24 40 00 	      movzbl	4203696(%rdx), %edx // edx = rdx + 4203696
+  4010a0:	88 54 04 10 	              movb	%dl, 16(%rsp,%rax)   // rsp + 16*rax = dl , dl是rdx的最低位
+  4010a4:	48 83 c0 01 	              addq	$1, %rax
+  4010a8:	48 83 f8 06 	              cmpq	$6, %rax             // rax 像一个计算器？ like a cycle
+  4010ac:	75 dd 	                    jne	-35 <phase_5+0x29>     // 40108b
+  4010ae:	c6 44 24 16 00 	            movb	$0, 22(%rsp)
+  4010b3:	be 5e 24 40 00 	            movl	$4203614, %esi       // 第二个参数为$4203614 
+  4010b8:	48 8d 7c 24 10 	            leaq	16(%rsp), %rdi
+  4010bd:	e8 76 02 00 00 	            callq	630 <strings_not_equal>  // 需要看参数
+  4010c2:	85 c0 	                    testl	%eax, %eax
+  4010c4:	74 13 	                    je	19 <phase_5+0x77>           // 4010d9
+  4010c6:	e8 6f 03 00 00 	            callq	879 <explode_bomb>
+  4010cb:	0f 1f 44 00 00 	            nopl	(%rax,%rax)
+  4010d0:	eb 07 	                    jmp	7 <phase_5+0x77>
+  4010d2:	b8 00 00 00 00 	            movl	$0, %eax             // eax存0
+  4010d7:	eb b2 	                    jmp	-78 <phase_5+0x29>     // 40108b
+  4010d9:	48 8b 44 24 18 	            movq	24(%rsp), %rax
   4010de:	64 48 33 04 25 28 00 00 00 	xorq	%fs:40, %rax
-  4010e7:	74 05 	je	5 <phase_5+0x8c>
-  4010e9:	e8 42 fa ff ff 	callq	-1470 <.plt+0x60>
-  4010ee:	48 83 c4 20 	addq	$32, %rsp
-  4010f2:	5b 	popq	%rbx
-  4010f3:	c3 	retq
+  4010e7:	74 05 	                    je	5 <phase_5+0x8c>       // 4010ee
+  4010e9:	e8 42 fa ff ff 	            callq	-1470 <.plt+0x60>
+  4010ee:	48 83 c4 20 	              addq	$32, %rsp
+  4010f2:	5b 	                        popq	%rbx
+  4010f3:	c3 	                        retq
 
 phase_6:
-  4010f4:	41 56 	pushq	%r14
-  4010f6:	41 55 	pushq	%r13
-  4010f8:	41 54 	pushq	%r12
-  4010fa:	55 	pushq	%rbp
-  4010fb:	53 	pushq	%rbx
-  4010fc:	48 83 ec 50 	subq	$80, %rsp
-  401100:	49 89 e5 	movq	%rsp, %r13
-  401103:	48 89 e6 	movq	%rsp, %rsi
-  401106:	e8 51 03 00 00 	callq	849 <read_six_numbers>
-  40110b:	49 89 e6 	movq	%rsp, %r14
-  40110e:	41 bc 00 00 00 00 	movl	$0, %r12d
-  401114:	4c 89 ed 	movq	%r13, %rbp
-  401117:	41 8b 45 00 	movl	(%r13), %eax
-  40111b:	83 e8 01 	subl	$1, %eax
-  40111e:	83 f8 05 	cmpl	$5, %eax
-  401121:	76 05 	jbe	5 <phase_6+0x34>
-  401123:	e8 12 03 00 00 	callq	786 <explode_bomb>
-  401128:	41 83 c4 01 	addl	$1, %r12d
-  40112c:	41 83 fc 06 	cmpl	$6, %r12d
-  401130:	74 21 	je	33 <phase_6+0x5f>
-  401132:	44 89 e3 	movl	%r12d, %ebx
-  401135:	48 63 c3 	movslq	%ebx, %rax
-  401138:	8b 04 84 	movl	(%rsp,%rax,4), %eax
-  40113b:	39 45 00 	cmpl	%eax, (%rbp)
-  40113e:	75 05 	jne	5 <phase_6+0x51>
-  401140:	e8 f5 02 00 00 	callq	757 <explode_bomb>
-  401145:	83 c3 01 	addl	$1, %ebx
-  401148:	83 fb 05 	cmpl	$5, %ebx
-  40114b:	7e e8 	jle	-24 <phase_6+0x41>
-  40114d:	49 83 c5 04 	addq	$4, %r13
-  401151:	eb c1 	jmp	-63 <phase_6+0x20>
-  401153:	48 8d 74 24 18 	leaq	24(%rsp), %rsi
-  401158:	4c 89 f0 	movq	%r14, %rax
-  40115b:	b9 07 00 00 00 	movl	$7, %ecx
-  401160:	89 ca 	movl	%ecx, %edx
-  401162:	2b 10 	subl	(%rax), %edx
-  401164:	89 10 	movl	%edx, (%rax)
-  401166:	48 83 c0 04 	addq	$4, %rax
-  40116a:	48 39 f0 	cmpq	%rsi, %rax
-  40116d:	75 f1 	jne	-15 <phase_6+0x6c>
-  40116f:	be 00 00 00 00 	movl	$0, %esi
-  401174:	eb 21 	jmp	33 <phase_6+0xa3>
-  401176:	48 8b 52 08 	movq	8(%rdx), %rdx
-  40117a:	83 c0 01 	addl	$1, %eax
-  40117d:	39 c8 	cmpl	%ecx, %eax
-  40117f:	75 f5 	jne	-11 <phase_6+0x82>
-  401181:	eb 05 	jmp	5 <phase_6+0x94>
-  401183:	ba d0 32 60 00 	movl	$6304464, %edx
-  401188:	48 89 54 74 20 	movq	%rdx, 32(%rsp,%rsi,2)
-  40118d:	48 83 c6 04 	addq	$4, %rsi
-  401191:	48 83 fe 18 	cmpq	$24, %rsi
-  401195:	74 14 	je	20 <phase_6+0xb7>
-  401197:	8b 0c 34 	movl	(%rsp,%rsi), %ecx
-  40119a:	83 f9 01 	cmpl	$1, %ecx
-  40119d:	7e e4 	jle	-28 <phase_6+0x8f>
-  40119f:	b8 01 00 00 00 	movl	$1, %eax
-  4011a4:	ba d0 32 60 00 	movl	$6304464, %edx
-  4011a9:	eb cb 	jmp	-53 <phase_6+0x82>
-  4011ab:	48 8b 5c 24 20 	movq	32(%rsp), %rbx
-  4011b0:	48 8d 44 24 28 	leaq	40(%rsp), %rax
-  4011b5:	48 8d 74 24 50 	leaq	80(%rsp), %rsi
-  4011ba:	48 89 d9 	movq	%rbx, %rcx
-  4011bd:	48 8b 10 	movq	(%rax), %rdx
-  4011c0:	48 89 51 08 	movq	%rdx, 8(%rcx)
-  4011c4:	48 83 c0 08 	addq	$8, %rax
-  4011c8:	48 39 f0 	cmpq	%rsi, %rax
-  4011cb:	74 05 	je	5 <phase_6+0xde>
-  4011cd:	48 89 d1 	movq	%rdx, %rcx
-  4011d0:	eb eb 	jmp	-21 <phase_6+0xc9>
-  4011d2:	48 c7 42 08 00 00 00 00 	movq	$0, 8(%rdx)
-  4011da:	bd 05 00 00 00 	movl	$5, %ebp
-  4011df:	48 8b 43 08 	movq	8(%rbx), %rax
-  4011e3:	8b 00 	movl	(%rax), %eax
-  4011e5:	39 03 	cmpl	%eax, (%rbx)
-  4011e7:	7d 05 	jge	5 <phase_6+0xfa>
-  4011e9:	e8 4c 02 00 00 	callq	588 <explode_bomb>
-  4011ee:	48 8b 5b 08 	movq	8(%rbx), %rbx
-  4011f2:	83 ed 01 	subl	$1, %ebp
-  4011f5:	75 e8 	jne	-24 <phase_6+0xeb>
-  4011f7:	48 83 c4 50 	addq	$80, %rsp
+  4010f4:	41 56 	                    pushq	%r14
+  4010f6:	41 55 	                    pushq	%r13
+  4010f8:	41 54 	                    pushq	%r12
+  4010fa:	55 	                        pushq	%rbp
+  4010fb:	53 	                        pushq	%rbx
+  -----------------------------------------------------------
+  4010fc:	48 83 ec 50 	              subq	$80, %rsp
+  401100:	49 89 e5 	                  movq	%rsp, %r13
+  401103:	48 89 e6 	                  movq	%rsp, %rsi
+  401106:	e8 51 03 00 00 	            callq	849 <read_six_numbers>  // 输入的str还是6个数 
+  -----------------------------------------------------------
+  // 六个地址分别存在%rdx, %rcx, %r8, %r9, (%rsp), 8(%rsp)处，
+  // 同时也在0x0(%rsi), 0x4(%rsi), 0x8(%rsi), 0xc(%rsi), 0x10(%rsi), 0x14(%rsi)处
+  40110b:	49 89 e6 	                  movq	%rsp, %r14
+  40110e:	41 bc 00 00 00 00 	        movl	$0, %r12d
+  401114:	4c 89 ed 	                  movq	%r13, %rbp
+  401117:	41 8b 45 00 	              movl	(%r13), %eax
+  40111b:	83 e8 01 	                  subl	$1, %eax
+  40111e:	83 f8 05 	                  cmpl	$5, %eax
+  401121:	76 05 	                    jbe	5 <phase_6+0x34>       // 401128
+  401123:	e8 12 03 00 00 	            callq	786 <explode_bomb>
+  401128:	41 83 c4 01 	              addl	$1, %r12d
+  40112c:	41 83 fc 06 	              cmpl	$6, %r12d
+  401130:	74 21 	                    je	33 <phase_6+0x5f>      // 401153
+  401132:	44 89 e3 	                  movl	%r12d, %ebx
+  401135:	48 63 c3 	                  movslq	%ebx, %rax
+  401138:	8b 04 84 	                  movl	(%rsp,%rax,4), %eax  // eax = rsp + 4*rax
+  40113b:	39 45 00 	                  cmpl	%eax, (%rbp)
+  40113e:	75 05 	                    jne	5 <phase_6+0x51>       // 401145
+  401140:	e8 f5 02 00 00 	            callq	757 <explode_bomb>
+  401145:	83 c3 01 	                  addl	$1, %ebx
+  401148:	83 fb 05 	                  cmpl	$5, %ebx
+  40114b:	7e e8 	                    jle	-24 <phase_6+0x41>     // 401135
+  40114d:	49 83 c5 04 	              addq	$4, %r13
+  401151:	eb c1 	                    jmp	-63 <phase_6+0x20>     // 401114
+  /*
+  for(int i = 0; i < 6; i++) {
+    if(array[i] < 7 && array[i] > 0) {
+        for(int j = i+1; j < 6; j++) {
+            if(array[i] == array[j]) {
+                bomb();
+            }
+        }
+    }else{
+      bomb();
+    }
+  }
+  */
+  -----------------------------------------------------------
+  401153:	48 8d 74 24 18 	            leaq	24(%rsp), %rsi
+  401158:	4c 89 f0 	                  movq	%r14, %rax
+  40115b:	b9 07 00 00 00 	            movl	$7, %ecx
+  401160:	89 ca 	                    movl	%ecx, %edx
+  401162:	2b 10 	                    subl	(%rax), %edx
+  401164:	89 10 	                    movl	%edx, (%rax)
+  401166:	48 83 c0 04 	              addq	$4, %rax
+  40116a:	48 39 f0 	                  cmpq	%rsi, %rax
+  40116d:	75 f1 	                    jne	-15 <phase_6+0x6c>     // 401160
+  /*
+  for(int i = 0; i < 6; i++) {
+      array[i] = 7 - array[i];
+  }
+  */
+  -----------------------------------------------------------
+  40116f:	be 00 00 00 00 	            movl	$0, %esi
+  401174:	eb 21 	                    jmp	33 <phase_6+0xa3>      // 401197
+  401176:	48 8b 52 08 	              movq	8(%rdx), %rdx
+  40117a:	83 c0 01 	                  addl	$1, %eax
+  40117d:	39 c8 	                    cmpl	%ecx, %eax
+  40117f:	75 f5 	                    jne	-11 <phase_6+0x82>     // 401176
+  401181:	eb 05 	                    jmp	5 <phase_6+0x94>       // 401188
+  401183:	ba d0 32 60 00 	            movl	$6304464, %edx
+  401188:	48 89 54 74 20 	            movq	%rdx, 32(%rsp,%rsi,2) //rsp + 2*rsi + 32 = rdx
+  40118d:	48 83 c6 04 	              addq	$4, %rsi
+  401191:	48 83 fe 18 	              cmpq	$24, %rsi
+  401195:	74 14 	                    je	20 <phase_6+0xb7>      // 4011AB
+  401197:	8b 0c 34 	                  movl	(%rsp,%rsi), %ecx    // ecx = rsp + rsi
+  40119a:	83 f9 01 	                  cmpl	$1, %ecx
+  40119d:	7e e4 	                    jle	-28 <phase_6+0x8f>     // 401183
+  40119f:	b8 01 00 00 00 	            movl	$1, %eax
+  4011a4:	ba d0 32 60 00 	            movl	$6304464, %edx       // 6304464存储? 0x6032d0
+  4011a9:	eb cb 	                    jmp	-53 <phase_6+0x82>     // 401176
+  /*
+  for(int i = 0; i < 6; i++) {
+    if(array[i] == 1) {
+      // memory[rsp + 0x24 + i] = 0x6032d0;
+    }else{
+      // memory[rsp + 0x24 + i] = 0x6032d0 + 8*(array[i]-1);
+    }
+  }
+  */
+  -----------------------------------------------------------
+  4011ab:	48 8b 5c 24 20 	            movq	32(%rsp), %rbx
+  4011b0:	48 8d 44 24 28 	            leaq	40(%rsp), %rax
+  4011b5:	48 8d 74 24 50 	            leaq	80(%rsp), %rsi
+  4011ba:	48 89 d9 	                  movq	%rbx, %rcx
+  4011bd:	48 8b 10 	                  movq	(%rax), %rdx
+  4011c0:	48 89 51 08 	              movq	%rdx, 8(%rcx)
+  4011c4:	48 83 c0 08 	              addq	$8, %rax
+  4011c8:	48 39 f0 	                  cmpq	%rsi, %rax
+  4011cb:	74 05 	                    je	5 <phase_6+0xde>       // 4011D2
+  4011cd:	48 89 d1 	                  movq	%rdx, %rcx
+  4011d0:	eb eb 	                    jmp	-21 <phase_6+0xc9>     // 4011BD
+  4011d2:	48 c7 42 08 00 00 00 00 	  movq	$0, 8(%rdx)
+  -----------------------------------------------------------
+  4011da:	bd 05 00 00 00 	            movl	$5, %ebp
+  4011df:	48 8b 43 08 	              movq	8(%rbx), %rax
+  4011e3:	8b 00 	                    movl	(%rax), %eax
+  4011e5:	39 03 	                    cmpl	%eax, (%rbx)
+  4011e7:	7d 05 	                    jge	5 <phase_6+0xfa>       // 4011EE
+  4011e9:	e8 4c 02 00 00 	            callq	588 <explode_bomb>
+  4011ee:	48 8b 5b 08 	              movq	8(%rbx), %rbx
+  4011f2:	83 ed 01 	                  subl	$1, %ebp
+  4011f5:	75 e8 	                    jne	-24 <phase_6+0xeb>     // 4011DF
+  4011f7:	48 83 c4 50 	              addq	$80, %
+
+---------------------------------------------
+
   4011fb:	5b 	popq	%rbx
   4011fc:	5d 	popq	%rbp
   4011fd:	41 5c 	popq	%r12
@@ -738,23 +776,23 @@ explode_bomb:
   401457:	e8 c4 f7 ff ff 	callq	-2108 <.plt+0x150>
 
 read_six_numbers:
-  40145c:	48 83 ec 18 	subq	$24, %rsp
-  401460:	48 89 f2 	movq	%rsi, %rdx
-  401463:	48 8d 4e 04 	leaq	4(%rsi), %rcx
-  401467:	48 8d 46 14 	leaq	20(%rsi), %rax
-  40146b:	48 89 44 24 08 	movq	%rax, 8(%rsp)
-  401470:	48 8d 46 10 	leaq	16(%rsi), %rax
-  401474:	48 89 04 24 	movq	%rax, (%rsp)
-  401478:	4c 8d 4e 0c 	leaq	12(%rsi), %r9
-  40147c:	4c 8d 46 08 	leaq	8(%rsi), %r8
-  401480:	be c3 25 40 00 	movl	$4203971, %esi
-  401485:	b8 00 00 00 00 	movl	$0, %eax
-  40148a:	e8 61 f7 ff ff 	callq	-2207 <.plt+0x120>
-  40148f:	83 f8 05 	cmpl	$5, %eax
-  401492:	7f 05 	jg	5 <read_six_numbers+0x3d>
-  401494:	e8 a1 ff ff ff 	callq	-95 <explode_bomb>
-  401499:	48 83 c4 18 	addq	$24, %rsp
-  40149d:	c3 	retq
+  40145c:	48 83 ec 18 	   subq	$24, %rsp
+  401460:	48 89 f2 	       movq	%rsi, %rdx       // %rdx = %rsi + 0
+  401463:	48 8d 4e 04 	   leaq	4(%rsi), %rcx    // %rcx = %rsi + 4
+  401467:	48 8d 46 14 	   leaq	20(%rsi), %rax   // %rax = %rsi + 20 
+  40146b:	48 89 44 24 08 	 movq	%rax, 8(%rsp)
+  401470:	48 8d 46 10 	   leaq	16(%rsi), %rax   // %rax = %rsi + 16
+  401474:	48 89 04 24 	   movq	%rax, (%rsp)
+  401478:	4c 8d 4e 0c 	   leaq	12(%rsi), %r9    // %r9 = %rsi + 12
+  40147c:	4c 8d 46 08 	   leaq	8(%rsi), %r8     // %r8 = %rsi + 8
+  401480:	be c3 25 40 00 	 movl	$4203971, %esi
+  401485:	b8 00 00 00 00 	 movl	$0, %eax
+  40148a:	e8 61 f7 ff ff 	 callq	-2207 <.plt+0x120>
+  40148f:	83 f8 05 	       cmpl	$5, %eax
+  401492:	7f 05 	         jg	5 <read_six_numbers+0x3d>  // 5 < %eax 则跳转到0x401499,不然就爆炸
+  401494:	e8 a1 ff ff ff 	 callq	-95 <explode_bomb>
+  401499:	48 83 c4 18 	   addq	$24, %rsp
+  40149d:	c3 	             retq
 
 read_line:
   40149e:	48 83 ec 08 	subq	$8, %rsp
