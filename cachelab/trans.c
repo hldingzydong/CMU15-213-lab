@@ -22,6 +22,66 @@ int is_transpose(int M, int N, int A[N][M], int B[M][N]);
 char transpose_submit_desc[] = "Transpose submission";
 void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 {
+    if(M == 32 && N == 32) {
+        for(int array_row = 0; array_row < 32; array_row += 8) {
+            for(int array_col = 0; array_col < 32; array_col += 8) {
+                for(int block_row = array_row; block_row < array_row + 8; block_row++) {
+                    int block_col = array_col;
+
+                    int tmp0 = A[block_row][block_col];
+                    int tmp1 = A[block_row][block_col+1];
+                    int tmp2 = A[block_row][block_col+2];
+                    int tmp3 = A[block_row][block_col+3];
+                    int tmp4 = A[block_row][block_col+4];
+                    int tmp5 = A[block_row][block_col+5];
+                    int tmp6 = A[block_row][block_col+6];
+                    int tmp7 = A[block_row][block_col+7];
+
+                    B[block_col][block_row] = tmp0;
+                    B[block_col+1][block_row] = tmp1;
+                    B[block_col+2][block_row] = tmp2;
+                    B[block_col+3][block_row] = tmp3;
+                    B[block_col+4][block_row] = tmp4;
+                    B[block_col+5][block_row] = tmp5;
+                    B[block_col+6][block_row] = tmp6;
+                    B[block_col+7][block_row] = tmp7;
+                }
+            }
+        }
+        return;
+    }
+
+    if(M == 61 && N == 67) {
+        for(int array_row = 0; array_row < 67; array_row += 16) {
+            for(int array_col = 0; array_col < 61; array_col += 16) {
+                for(int block_row = array_row; block_row < array_row + 16 && block_row < 67; block_row++) {
+                    for(int block_col = array_col; block_col < array_col + 16 && block_col < 61; block_col++) {
+                        B[block_col][block_row] = A[block_row][block_col];
+                    }
+                }
+            }
+        }
+        return;
+    }
+
+    if(M == 64 && N == 64) {
+        for(int array_row = 0; array_row < 64; array_row += 4) {
+            for(int array_col = 0; array_col < 64; array_col += 4) {
+                for(int block_row = array_row; block_row < array_row + 4; block_row++) {
+                    int block_col = array_col;
+                    int tmp0 = A[block_row][block_col];
+                    int tmp1 = A[block_row][block_col+1];
+                    int tmp2 = A[block_row][block_col+2];
+                    int tmp3 = A[block_row][block_col+3];
+                    B[block_col][block_row] = tmp0;
+                    B[block_col+1][block_row] = tmp1;
+                    B[block_col+2][block_row] = tmp2;
+                    B[block_col+3][block_row] = tmp3;
+                }
+            }
+        }
+        return;
+    }
 }
 
 /* 
