@@ -60,6 +60,10 @@ extern char **environ; /* Defined by libc */
 #define MAXBUF   8192  /* Max I/O buffer size */
 #define LISTENQ  1024  /* Second argument to listen() */
 
+/* Recommended max cache and object sizes */
+#define MAX_CACHE_SIZE 1049000
+#define MAX_OBJECT_SIZE 102400
+
 /* Our own error-handling functions */
 void unix_error(char *msg);
 void posix_error(int code, char *msg);

@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include "csapp.h"
-/* Recommended max cache and object sizes */
-#define MAX_CACHE_SIZE 1049000
-#define MAX_OBJECT_SIZE 102400
+#include "cache.h"
 
 /* You won't lose style points for including this long line in your code */
 static const char *user_agent_hdr = "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:10.0.3) Gecko/20120305 Firefox/10.0.3\r\n";
@@ -26,6 +24,7 @@ int main(int argc, char** argv)
     }
 
     signal(SIGPIPE, SIG_IGN);  // 忽略 SIGPIPE 信号
+    init_cache();
     listenfd = Open_listenfd(argv[1]);
     while(1) {
     	clientlen = sizeof(clientaddr);
@@ -57,7 +56,7 @@ void doit(int fd) {
     char buf[MAXLINE], method[MAXLINE], uri[MAXLINE], version[MAXLINE];
     char hostname[MAXLINE], port[MAXLINE], path[MAXLINE];
     char new_package[MAXLINE], response[MAXLINE];
-    int clientfd;
+    int clientfd, object_size;
     ssize_t length;
 	rio_t rio, client_rio;
 
@@ -79,6 +78,17 @@ void doit(int fd) {
         return;
     }
 
+    /*
+     * read from cache
+     */
+    char* cache_buf_r;
+    if((cache_buf_r = read_from_cache(uri)) != NULL) {
+        // response to client
+        Rio_writen(fd, cache_buf_r, strlen(cache_buf_r));
+        return;
+    }
+
+
     // printf("hostname = %s\n", hostname);
     // printf("port = %s\n", port);
     // connect to server
@@ -99,8 +109,19 @@ void doit(int fd) {
     
     // 从client_rio接受response,并直接返回给client
     // 这里因为file很大，需要多次read
+    // 增加cache功能
+    object_size = 0;
+    char cache_buf[MAX_OBJECT_SIZE];
+    char* cache_buf_ptr = cache_buf;
+    memset(cache_buf, 0, MAX_OBJECT_SIZE);
     while((length = Rio_readnb(&client_rio, response, MAXLINE)) > 0) {
         Rio_writen(fd, response, length);
+        object_size += length;
+        strcpy(cache_buf_ptr, response);
+        cache_buf_ptr += length;
+    }
+    if(object_size < MAX_OBJECT_SIZE) {
+        write_into_cache(uri, cache_buf);
     }
     Close(clientfd);
 }

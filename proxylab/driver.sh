@@ -301,7 +301,7 @@ echo "Starting the blocking NOP server on port ${nop_port}"
 nop_pid=$!
 # Wait for the nop server to start in earnest
 # wait_for_port_use "${nop_port}"
-sleep 10
+sleep 5
 # Try to fetch a file from the blocking nop-server using the proxy
 clear_dirs
 echo "Trying to fetch a file from the blocking nop-server"
@@ -337,7 +337,7 @@ wait $nop_pid 2> /dev/null
 
 echo "concurrencyScore: $concurrencyScore/${MAX_CONCURRENCY}"
 
-<<'COMMENT'
+
 #####
 # Caching
 #
@@ -345,7 +345,7 @@ echo ""
 echo "*** Cache ***"
 
 # Run the Tiny Web server
-tiny_port=$(free_port)
+tiny_port=12681
 echo "Starting tiny on port ${tiny_port}"
 cd ./tiny
 ./tiny ${tiny_port} &> /dev/null &
@@ -353,17 +353,17 @@ tiny_pid=$!
 cd ${HOME_DIR}
 
 # Wait for tiny to start in earnest
-wait_for_port_use "${tiny_port}"
+# wait_for_port_use "${tiny_port}"
 
 # Run the proxy
-proxy_port=$(free_port)
+proxy_port=12680
 echo "Starting proxy on port ${proxy_port}"
 ./proxy ${proxy_port} &> /dev/null &
 proxy_pid=$!
 
 # Wait for the proxy to start in earnest
-wait_for_port_use "${proxy_port}"
-
+# wait_for_port_use "${proxy_port}"
+sleep 5
 # Fetch some files from tiny using the proxy
 clear_dirs
 for file in ${CACHE_LIST}
@@ -404,7 +404,6 @@ totalScore=`expr ${basicScore} + ${cacheScore} + ${concurrencyScore}`
 maxScore=`expr ${MAX_BASIC} + ${MAX_CACHE} + ${MAX_CONCURRENCY}`
 echo ""
 echo "totalScore: ${totalScore}/${maxScore}"
-COMMENT
 exit
 
 
