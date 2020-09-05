@@ -1,2 +1,9 @@
-This is [CMU15-213 Fall 2015](http://www.cs.cmu.edu/afs/cs/academic/class/15213-f15/www/schedule.html) lab.
+[CMU15-213 Fall 2015](http://www.cs.cmu.edu/afs/cs/academic/class/15213-f15/www/schedule.html)
 - [Video Resource](https://www.youtube.com/watch?v=4CpHpFu_KYM&list=PLbY-cFJNzq7z_tQGq-rxtq_n2QQDf5vnM)
+- `attacklab` done
+- `bomblab` done
+- `cachelab` done
+- `datalab` done
+- `malloclab` done
+- `proxylab` done
+- `shelllab` done
